@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>早上窗台上那摊水 · 冬天窗户为什么一夜挂满水</title>
+<meta name="description" content="填玻璃种类、窗帘拉没拉、睡前室温湿度、夜里外面多冷：按一晚逐 10 分钟推，看玻璃几点开始起雾、起床时大约积多少水、湿度降到多少或拉开窗帘能不能不结露。粗估，不是实测。">
+<style>
+  :root{--bg:#e9eef1;--paper:#fbfcfd;--ink:#1d2830;--ink2:#47545e;--mut:#7f8b94;--line:#d3dbe1;--rule:#e6ebef;--wet:#2f74b5;--wet2:#cfe2f3;--warm:#c0622f;--ok:#2f6b4f;--bad:#a8372b;--hi:#fff6dc}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1060px;margin:0 auto;padding:22px 14px 72px}
+  h1{font-size:30px;line-height:1.25;margin:0 0 6px;letter-spacing:.03em}
+  .sub{color:var(--ink2);margin:0;font-size:15.5px}
+  .muted{color:var(--mut);font-size:13.5px}
+  .hide{display:none !important}
+  button,input,select{font:inherit}
+  button{cursor:pointer}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+  .chip{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13.5px;color:var(--ink2)}
+  .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .scene{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:16px;margin-top:14px;align-items:start}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
+  .card h2{font-size:16px;margin:0 0 10px}
+  /* 窗 */
+  .win{position:relative;aspect-ratio:4/5;border:10px solid #cfd6dc;border-bottom-width:16px;border-radius:4px;background:linear-gradient(#5b7894,#a7bccd 70%,#d8e2ea);overflow:hidden}
+  .win .mid{position:absolute;left:50%;top:0;bottom:0;width:8px;margin-left:-4px;background:#cfd6dc}
+  .win .fog{position:absolute;inset:0;background:rgba(255,255,255,0);backdrop-filter:blur(0);transition:background .3s}
+  .win .drops{position:absolute;inset:0}
+  .win .curt{position:absolute;top:0;bottom:0;width:30%;background:repeating-linear-gradient(90deg,#b7a68f 0 10px,#c8b9a3 10px 20px);opacity:.9;transition:width .3s}
+  .win .curt.l{left:0}.win .curt.r{right:0}
+  .win .tag{position:absolute;left:8px;right:8px;bottom:8px;background:rgba(255,255,255,.88);border-radius:6px;padding:6px 8px;font-size:13px;line-height:1.4;color:var(--ink)}
+  .sill{height:12px;margin:0 -6px;border-radius:0 0 4px 4px;background:#bfc8cf;position:relative}
+  .sill .pool{position:absolute;left:50%;top:2px;height:7px;border-radius:7px;background:var(--wet);transform:translateX(-50%);transition:width .3s}
+  .f{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:8px;align-items:center;margin:7px 0}
+  .f label{font-size:14px;color:var(--ink2)}
+  .f label small{display:block;color:var(--mut);font-size:11.5px;line-height:1.3}
+  .f input,.f select{width:100%;min-width:0;border:1px solid var(--line);background:#fff;border-radius:6px;padding:4px 8px;font-size:16px;text-align:right}
+  .f select{text-align:left}
+  .f.wide{grid-template-columns:minmax(0,1fr) 168px}
+  .pair input{text-align:center;padding:4px 2px}
+  .f input:focus,.f select:focus{outline:2px solid var(--wet2);border-color:var(--wet)}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .seg{display:flex;gap:6px}
+  .seg button{flex:1;border:1px solid var(--line);background:#fff;border-radius:6px;padding:4px 0;font-size:14px}
+  .seg button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .bad{border-color:var(--bad)!important;background:#fff4f2!important}
+  hr.d{border:0;border-top:1px dashed var(--line);margin:12px 0}
+  .big{font-size:22px;line-height:1.45;font-weight:700;margin:0 0 8px;overflow-wrap:anywhere}
+  .why{color:var(--ink2);font-size:14.5px;margin:0;overflow-wrap:anywhere}
+  .err{background:#fff4f2;border:1px solid #f0c9c2;color:var(--bad);border-radius:8px;padding:10px 14px}
+  .err ul{margin:4px 0 0;padding-left:20px}
+  .chart{width:100%;height:auto;display:block;margin-top:6px}
+  .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--ink2);margin-top:4px}
+  .legend i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:4px}
+  .acts{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+  .act{text-align:left;background:#f2f7fb;border:1px solid var(--wet2);color:var(--ink);border-radius:8px;padding:7px 10px;font-size:14.5px;overflow-wrap:anywhere}
+  .act:hover{background:#e6f0f8}
+  table.cmp{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+  table.cmp th,table.cmp td{border-bottom:1px solid var(--rule);padding:6px 6px;text-align:right;white-space:nowrap}
+  table.cmp th:first-child,table.cmp td:first-child{text-align:left}
+  table.cmp tr.cur td{background:var(--hi);font-weight:700}
+  table.cmp td.w{color:var(--wet)} table.cmp td.dry{color:var(--ok)}
+  .tw{overflow-x:auto}
+  .tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .tools button{background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;font-size:14px}
+  details{margin-top:16px}
+  details summary{cursor:pointer;font-weight:600}
+  details li{font-size:14px;color:var(--ink2);margin:4px 0}
+  @media (max-width:760px){
+    .scene{grid-template-columns:minmax(0,1fr)}
+    h1{font-size:24px}
+    .big{font-size:19px}
+    .win{aspect-ratio:16/9}
+    .f{grid-template-columns:minmax(0,1fr) 104px}
+    table.cmp{font-size:13px} table.cmp th,table.cmp td{padding:5px 3px;white-space:nowrap} table.cmp th:nth-child(3),table.cmp td:nth-child(3){display:none}
+    .f.wide{grid-template-columns:minmax(0,1fr) 150px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>早上窗台上那摊水</h1>
+  <p class="sub">冬天一觉醒来玻璃上全是水？填玻璃、窗帘和一晚的温度湿度，逐 10 分钟推一遍：几点开始起雾、起床时大约积了多少水、改哪一样能不结露。</p>
+  <div class="chips" id="presets"></div>
+  <p class="muted" id="presetNote"></p>
+
+  <div class="scene">
+    <div class="card">
+      <div class="win" id="win"><div class="drops" id="drops"></div><div class="fog" id="fog"></div><div class="mid"></div><div class="curt l" id="curtL"></div><div class="curt r" id="curtR"></div><div class="tag" id="winTag"></div></div>
+      <div class="sill"><div class="pool" id="pool"></div></div>
+      <hr class="d">
+      <div class="f"><label for="name">房间</label><input id="name" maxlength="12"></div>
+      <div class="f wide"><label for="glass">玻璃</label><select id="glass"></select></div>
+      <div class="f" id="uBox"><label for="U">玻璃传热系数 U<small>W/m²K，0.5～6.5，看窗户铭牌或检测报告</small></label><input id="U" inputmode="decimal"></div>
+      <div class="f wide"><label>窗帘</label><div class="seg" id="curSeg"><button type="button" data-c="on" id="curOn">拉上</button><button type="button" data-c="off" id="curOff">拉开</button></div></div>
+      <div class="f"><label for="area">玻璃面积<small>m²，只算玻璃不算框</small></label><input id="area" inputmode="decimal"></div>
+      <hr class="d">
+      <div class="f wide"><label>睡觉 → 起床</label><div class="pair"><input id="bed" aria-label="睡觉时间"><input id="wake" aria-label="起床时间"></div></div>
+      <div class="f wide"><label>室温 °C<small>睡前 → 起床</small></label><div class="pair"><input id="ti0" inputmode="decimal" aria-label="睡前室温"><input id="ti1" inputmode="decimal" aria-label="起床时室温"></div></div>
+      <div class="f wide"><label>室外 °C<small>睡前 → 起床</small></label><div class="pair"><input id="to0" inputmode="decimal" aria-label="睡前室外温度"><input id="to1" inputmode="decimal" aria-label="起床时室外温度"></div></div>
+      <div class="f"><label for="rh">睡前室内湿度 %<small>湿度计上的读数</small></label><input id="rh" inputmode="decimal"></div>
+      <p class="muted" style="margin:8px 0 0">改完自动重算 <span id="saveTag"></span></p>
+    </div>
+
+    <div>
+      <div class="card">
+        <div id="errBox" class="err hide"></div>
+        <div id="okBox">
+          <p class="big" id="headline"></p>
+          <p class="why" id="why"></p>
+          <svg class="chart" id="chart" viewBox="0 0 640 260" role="img" aria-label="一晚上玻璃温度与露点"></svg>
+          <div class="legend"><span><i style="background:#c0622f"></i>玻璃里侧温度</span><span><i style="background:#2f74b5"></i>露点（低于它就挂水）</span><span><i style="background:#9aa7b1"></i>室外</span><span><i style="background:#cfe2f3;height:10px"></i>结露的时段</span></div>
+          <h2 style="margin-top:14px">改一样试试（点了直接改上面的条件）</h2>
+          <div class="acts" id="acts"></div>
+        </div>
+      </div>
+      <div class="card" id="cmpPanel" style="margin-top:14px">
+        <h2>同样一晚，换玻璃、拉不拉窗帘</h2>
+        <div class="tw"><table class="cmp" id="cmp"></table></div>
+        <p class="muted" style="margin:6px 0 0">黄色那行是你现在的条件。只换这两样，温度、湿度、时间都不变。</p>
+      </div>
+      <div class="tools">
+        <button type="button" id="dlPng">结果卡 PNG</button>
+        <button type="button" id="dlCsv">逐 10 分钟 CSV</button>
+        <button type="button" id="dlMd">文字版 MD</button>
+        <button type="button" id="dlJson">备份 JSON</button>
+        <button type="button" id="impJson">导入备份</button>
+        <input type="file" id="impFile" accept=".json,application/json" class="hide">
+        <button type="button" id="reset">回到默认</button>
+      </div>
+      <p class="muted" id="impMsg"></p>
+    </div>
+  </div>
+
+  <details>
+    <summary>怎么算的、哪些不算</summary>
+    <ul>
+      <li>只看玻璃中间那块：玻璃里侧温度 = 室温 − (室温 − 室外) × 内侧热阻 ÷ 总热阻。总热阻 = 1/U；内侧热阻窗帘拉开取 0.13，拉上按 0.30 估（窗帘挡住了屋里的暖空气）。</li>
+      <li>露点用 Magnus 公式：饱和水汽压 6.1094 × e^(17.625T ÷ (T + 243.04)) hPa。屋里的水汽量整夜按睡前算，不变。</li>
+      <li>夜里室外、室温都按睡前到起床直线变化（起床时最冷）。每 10 分钟算一次，玻璃比露点低就结露，按水汽压差估算凝结多少；回暖时已有的水会往回干。</li>
+      <li>窗框、玻璃边缘、窗角比中间冷得多，往往先挂水；这里不算，所以实际可能更早、更多。</li>
+      <li>屋里的水汽整夜按睡前不变：相当于人呼吸、家里的水汽刚好补上玻璃吸走的那部分；不另算做饭、晾衣服加的水汽，不算开窗、新风和空调除湿。窗上结得很多、屋子很小时会高估。水量只是数量级的粗估，不是实测。</li>
+      <li>四种玻璃的 U 值是常见量级的设计取值，不同产品差别很大，有铭牌就选「自己填」。默认数字是虚构示例。</li>
+    </ul>
+  </details>
+</div>
+<script src="./core.js"></script>
+<script src="./ui.js"></script>
+</body>
+</html>
